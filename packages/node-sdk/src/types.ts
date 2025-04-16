@@ -2,6 +2,10 @@
 
 import { RuleFilter } from "@bucketco/flag-evaluation";
 
+declare global {
+  const EdgeRuntime: string | undefined;
+}
+
 /**
  * Describes the meta context associated with tracking.
  **/

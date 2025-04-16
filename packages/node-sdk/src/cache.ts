@@ -1,4 +1,4 @@
-import { Cache, Logger } from "./types";
+import type { Cache, Logger } from "./types";
 
 /**
  * Create a cached function that updates the value asynchronously.
@@ -43,13 +43,16 @@ export default function cache<T>(
       logger?.error("failed to update cached value", e);
     } finally {
       refreshPromise = undefined;
-      timeoutId = setTimeout(update, ttl).unref();
+      timeoutId = setTimeout(update, ttl);
+      if (timeoutId.unref) {
+        timeoutId.unref();
+      }
     }
   };
 
   const get = () => {
     if (lastUpdate !== undefined) {
-      const age = Date.now() - lastUpdate!;
+      const age = Date.now() - lastUpdate as number;
       if (age > staleTtl) {
         logger?.warn("cached value is stale", { age, cachedValue });
       }

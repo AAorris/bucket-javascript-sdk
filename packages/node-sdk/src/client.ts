@@ -1,5 +1,3 @@
-import fs from "fs";
-
 import { evaluateFeatureRules, flattenJSON } from "@bucketco/flag-evaluation";
 
 import BatchBuffer from "./batch-buffer";
@@ -51,7 +49,6 @@ import {
   once,
 } from "./utils";
 
-const bucketConfigDefaultFile = "bucketConfig.json";
 
 type BulkEvent =
   | {
@@ -205,14 +202,6 @@ export class BucketClient {
           options.fetchTimeoutMs >= 0),
       "fetchTimeoutMs must be a non-negative integer",
     );
-
-    if (!options.configFile) {
-      options.configFile =
-        (process.env.BUCKET_CONFIG_FILE ??
-        fs.existsSync(bucketConfigDefaultFile))
-          ? bucketConfigDefaultFile
-          : undefined;
-    }
 
     const externalConfig = loadConfig(options.configFile);
     const config = mergeSkipUndefined(externalConfig, options);
